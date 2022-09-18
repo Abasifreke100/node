@@ -17,7 +17,7 @@ async function bootstrap() {
 
   // interceptors
   app.useGlobalInterceptors(
-    // new TransformationInterceptor(app.get(Reflector)),
+    new TransformationInterceptor(app.get(Reflector)),
     new TimeoutInterceptor(),
   );
 

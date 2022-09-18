@@ -1,4 +1,4 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -12,11 +12,11 @@ export class AuthService {
     return bcrypt.hash(password, 12);
   }
 
-  async register(user: Readonly<CreateUserDto>): Promise<User> {
-    const { password } = user;
+  async register(requestPayload: Readonly<CreateUserDto>): Promise<User> {
+    const { password } = requestPayload;
     const hash = await this.hashPassword(password);
     const createdUser = await this.userService.create({
-      ...user,
+      ...requestPayload,
       password: hash,
     });
     return createdUser;
