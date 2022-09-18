@@ -14,7 +14,6 @@ export class AuthService {
 
   async register(user: Readonly<CreateUserDto>): Promise<User> {
     const { password } = user;
-
     const hash = await this.hashPassword(password);
     const createdUser = await this.userService.create({
       ...user,

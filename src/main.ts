@@ -1,10 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/utils/filter';
+import { HttpExceptionFilter } from './common/filter/filter';
 import { RequestGuard } from './common/utils/guards';
-import { TimeoutInterceptor } from './common/utils/timeout';
+import { TimeoutInterceptor } from './common/interceptor/timeout.interceptor';
+import { TransformationInterceptor } from './common/interceptor/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,11 +15,14 @@ async function bootstrap() {
   // guards
   app.useGlobalGuards(new RequestGuard());
 
+  // interceptors
+  app.useGlobalInterceptors(
+    // new TransformationInterceptor(app.get(Reflector)),
+    new TimeoutInterceptor(),
+  );
+
   // filters
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // interceptors
-  app.useGlobalInterceptors(new TimeoutInterceptor());
 
   // prefix
   app.setGlobalPrefix('/api/v1');
