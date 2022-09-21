@@ -24,7 +24,7 @@ export class TransformationInterceptor<T>
   ): Observable<Response<T>> {
     const responseMessage =
       this.reflector.get<string>(ResponseMessageKey, context.getHandler()) ??
-      '';
+      null;
 
     return next.handle().pipe(
       map((data) => ({

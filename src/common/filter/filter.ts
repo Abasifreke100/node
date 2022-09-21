@@ -4,7 +4,13 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+
+interface IResponseMsg {
+  statusCode: number;
+  message: string[] | string;
+  error: string;
+}
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -14,11 +20,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const message = exception.message;
 
+    const responseMsg: IResponseMsg = exception.getResponse() as IResponseMsg;
+
     response.status(status).json({
       success: false,
       data: exception.getResponse(),
       statusCode: status,
-      message: message,
+      message: Array.isArray(responseMsg.message)
+        ? responseMsg.message[0]
+        : message,
     });
   }
 }

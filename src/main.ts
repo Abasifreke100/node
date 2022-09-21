@@ -6,10 +6,12 @@ import { HttpExceptionFilter } from './common/filter/filter';
 import { RequestGuard } from './common/utils/guards';
 import { TimeoutInterceptor } from './common/interceptor/timeout.interceptor';
 import { TransformationInterceptor } from './common/interceptor/response.interceptor';
+import { environment } from './common/config/environment';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+
   app.use(helmet());
 
   // guards
@@ -35,6 +37,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(process.env.APP_PORT || 3000);
+  await app.listen(environment.APP.PORT || 3000);
 }
 bootstrap();

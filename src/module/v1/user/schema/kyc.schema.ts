@@ -1,9 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 export type KycDocument = Kyc & Document;
-
-@Schema()
+@Schema({ _id: false })
 export class Kyc {
   @Prop({ default: false })
   email: boolean;

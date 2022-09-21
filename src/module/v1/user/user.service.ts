@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -13,7 +14,7 @@ import { User, UserDocument } from './schema/user.schema';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     try {
       const newUser = new this.userModel(createUserDto);
       return await newUser.save();
@@ -28,16 +29,46 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findById(_id: string): Promise<UserDocument> {
+    try {
+      const user = await this.userModel.findById(_id);
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  async findOne(query: object): Promise<User> {
+  async findOne(query: object): Promise<UserDocument> {
     return await this.userModel.findOne(query);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findByEmail(email: string): Promise<UserDocument> {
+    try {
+      const user = await this.userModel.findOne({ email }).select('+password');
+      if (!user) {
+        throw new NotFoundException('User with this email not found');
+      }
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
+    try {
+      const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
+        new: true,
+      });
+      if (!user) {
+        throw new NotFoundException('User with this email not found');
+      }
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   remove(id: number) {

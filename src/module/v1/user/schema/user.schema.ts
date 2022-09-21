@@ -1,10 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
-import { Kyc, KycSchema } from './kyc.schema';
+import { Kyc } from './kyc.schema';
 
 export type UserDocument = User & Document;
-
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, trim: true })
@@ -19,7 +17,7 @@ export class User {
   @Prop({ required: true, unique: true, trim: true, lowercase: true })
   email: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, select: false })
   pin: string;
 
   @Prop({
@@ -37,13 +35,23 @@ export class User {
   @Prop({ default: false })
   suspend: boolean;
 
-  @Prop({ type: KycSchema })
-  kyc: Kyc;
+  @Prop({ default: false })
+  hasPin: boolean;
 
+  @Prop()
   country: string;
+
+  @Prop()
   dailCode: string;
+
+  @Prop()
   userIP: string;
+
+  @Prop()
   lastActive: Date;
+
+  @Prop({ default: {} })
+  verification: Kyc;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

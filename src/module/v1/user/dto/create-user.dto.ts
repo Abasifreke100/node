@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, IsString, IsOptional, Length } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
   @Length(2, 30)
@@ -27,10 +27,4 @@ export class CreateUserDto {
 
   @IsString()
   country: string;
-
-  // @IsString()
-  // userIP: string;
-
-  // @IsDate()
-  // lastActive: Date;
 }
