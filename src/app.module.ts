@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './module/v1/auth/auth.module';
 import { environment } from './common/config/environment';
 import { OtpModule } from './module/v1/otp/otp.module';
+import { MailModule } from './module/v1/mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { OtpModule } from './module/v1/otp/otp.module';
     UserModule,
     AuthModule,
     OtpModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

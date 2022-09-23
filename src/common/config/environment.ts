@@ -10,6 +10,11 @@ interface IEnvironment {
   JWT: {
     SECRET: string;
   };
+  EMAIL: {
+    SERVICE: string;
+    USERNAME: string;
+    PASSWORD: string;
+  };
   DB: {
     URL: string;
   };
@@ -23,6 +28,11 @@ export const environment: IEnvironment = {
   },
   JWT: {
     SECRET: process.env.JWT_SECRET!,
+  },
+  EMAIL: {
+    SERVICE: process.env.EMAIL_SERVICE,
+    USERNAME: process.env.EMAIL_USERNAME,
+    PASSWORD: process.env.EMAIL_PASSWORD,
   },
   DB: {
     URL: process.env.DB_URL!,

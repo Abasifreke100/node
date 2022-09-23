@@ -31,9 +31,9 @@ export class TransformationInterceptor<T>
         success:
           context.switchToHttp().getResponse().statusCode === 201 ||
           context.switchToHttp().getResponse().statusCode === 200,
-        data,
+        data: data?.data || data,
         statusCode: context.switchToHttp().getResponse().statusCode,
-        message: responseMessage,
+        message: data?.message || responseMessage,
       })),
     );
   }

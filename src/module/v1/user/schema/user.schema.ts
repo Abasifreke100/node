@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { RoleEnum } from 'src/common/constants/user.constants';
 import { Kyc } from './kyc.schema';
 
 export type UserDocument = User & Document;
@@ -21,8 +22,14 @@ export class User {
   pin: string;
 
   @Prop({
-    enum: ['CUSTOMER', 'ADMIN', 'SUPER_ADMIN', 'SUPPORT', 'ACCOUNT'],
-    default: 'CUSTOMER',
+    enum: [
+      RoleEnum.CUSTOMER,
+      RoleEnum.ADMIN,
+      RoleEnum.SUPER_ADMIN,
+      RoleEnum.SUPPORT,
+      RoleEnum.ACCOUNT,
+    ],
+    default: RoleEnum.CUSTOMER,
   })
   role: string;
 

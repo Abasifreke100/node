@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Request } from '@nestjs/common';
+import { USER_UPDATED } from 'src/common/constants/user.constants';
+import { ResponseMessage } from 'src/common/decorator/response.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDocument } from './schema/user.schema';
 import { UserService } from './user.service';
@@ -12,6 +14,7 @@ export class UserController {
     return await this.userService.findById(req.user);
   }
 
+  @ResponseMessage(USER_UPDATED)
   @Patch('me')
   async update(@Body() updateUserDto: UpdateUserDto, @Request() req) {
     console.log(updateUserDto);
