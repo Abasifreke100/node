@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -26,7 +27,7 @@ export class OtpService {
     return Math.floor(100000 + Math.random() * 900000);
   };
 
-  async create(email: string, reason: OtpEnum): Promise<OtpDocument> {
+  async creates(email: string, reason: OtpEnum): Promise<OtpDocument> {
     const otp = this.generateOTP();
     console.log(otp);
     try {
@@ -53,6 +54,42 @@ export class OtpService {
       return createdOtp;
     } catch (error) {
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async create(email: string, reason: OtpEnum) {
+    const otp = this.generateOTP();
+    console.log(otp);
+
+    try {
+      const subject = `${environment.APP.NAME} - One time password`;
+      const user = await this.userModel.findOne({ email });
+      console.log(user);
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      await this.otpModel.updateMany({
+        email,
+        deactivated: true,
+      });
+
+      const createdOtp = await this.otpModel.create({ otp, reason, email });
+      if (!createdOtp) {
+        throw new BadRequestException('Could not create otp');
+      }
+
+      // await this.mailService.sendMail({
+      //   to: email,
+      //   subject,
+      //   template: './otp',
+      //   context: { otp },
+      // });
+      return await createdOtp.save();
+
+    } catch (err) {
+      throw new UnprocessableEntityException(err);
     }
   }
 }
